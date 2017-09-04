@@ -61,6 +61,7 @@
 		154FB9DA1F5D3178006BAAD5 /* UnderScore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnderScore.h; sourceTree = "<group>"; };
 		154FB9DB1F5D4577006BAAD5 /* underscore.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = underscore.js; sourceTree = "<group>"; };
 		154FB9DC1F5D7196006BAAD5 /* 注释.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "注释.h"; sourceTree = "<group>"; };
+		154FB9DD1F5D763A006BAAD5 /* 格式.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "格式.h"; sourceTree = "<group>"; };
 		155B7BF51F5BD54F0098E9A8 /* BookNotes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BookNotes; sourceTree = BUILT_PRODUCTS_DIR; };
 		155B7BF81F5BD54F0098E9A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		155B7C0E1F5BD5720098E9A8 /* CleanCodes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CleanCodes; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +159,7 @@
 				155B7C151F5BD58A0098E9A8 /* 1_整洁代码.h */,
 				155B7C161F5BD83D0098E9A8 /* 有意义的命名.h */,
 				155B7C171F5BE2600098E9A8 /* 函数.h */,
+				154FB9DD1F5D763A006BAAD5 /* 格式.h */,
 				154FB9DC1F5D7196006BAAD5 /* 注释.h */,
 			);
 			path = CleanCodes;
