@@ -19,9 +19,29 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>JSRedBook.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>UnderScore.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>154FB9C61F5D25F7006BAAD5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>154FB9D21F5D3167006BAAD5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>155B7BF41F5BD54F0098E9A8</key>
 		<dict>
 			<key>primary</key>
