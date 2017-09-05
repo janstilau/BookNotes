@@ -1,5 +1,16 @@
-var map = Array.prototype.map;
-var a = map.call("Hello world", function(x) {
-    return x;
-})
-console.log(a);
+
+
+
+function actionMake() {
+    var a = 100;
+    return function () {
+        console.log(a);
+    };
+}
+
+function sayHi(action) {
+    var a = 1000;
+    action();
+}
+sayHi(actionMake());
+
