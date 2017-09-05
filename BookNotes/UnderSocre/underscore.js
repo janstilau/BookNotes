@@ -91,16 +91,7 @@
         }
         return obj;
     };
-    /*
-    如果传进来的是一个数组,那么就调用数组的forEach方法.
-    数组的forEach方法,有两个参数,第一个是callback,第二个是theArg.callback是回调,
-接受三个参数(当前ele,当前ele的index,和遍历的array),而theArg则指定callBack里面的
-this到底是谁.
-    中间的[]方式没有太明白.它应该和forEach的效果是一样的,是为了兼容之前没有forEach
-的版本吗.
-    最后是遍历object的所有的key,用到了underscore的keys方法.
-     */
- 
+
     // Return the results of applying the iterator to each element.
     // Delegates to **ECMAScript 5**'s native `map` if available.
     _.map = _.collect = function(obj, iterator, context) {
@@ -843,9 +834,6 @@ this到底是谁.
             if (_.has(obj, key)) keys.push(key);
         return keys;
     };
- /*
-    首先判断obj是不是object类型return obj === Object(obj);
-  */
 
     // Retrieve the values of an object's properties.
     _.values = function(obj) {
@@ -1134,8 +1122,6 @@ this到底是谁.
     _.has = function(obj, key) {
         return hasOwnProperty.call(obj, key);
     };
- 
-    // hasOwnProperty 的缩写版本.
 
     // Utility Functions
     // -----------------
