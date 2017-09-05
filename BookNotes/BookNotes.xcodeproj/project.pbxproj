@@ -69,6 +69,7 @@
 		155B7C151F5BD58A0098E9A8 /* 1_整洁代码.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "1_整洁代码.h"; sourceTree = "<group>"; };
 		155B7C161F5BD83D0098E9A8 /* 有意义的命名.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "有意义的命名.h"; sourceTree = "<group>"; };
 		155B7C171F5BE2600098E9A8 /* 函数.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "函数.h"; sourceTree = "<group>"; };
+		157F94FA1F5E4B89005C0034 /* 7_Function.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 7_Function.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +109,7 @@
 			children = (
 				154FB9C91F5D25F7006BAAD5 /* main.m */,
 				154FB9CE1F5D2604006BAAD5 /* 10_Dom.h */,
+				157F94FA1F5E4B89005C0034 /* 7_Function.h */,
 			);
 			path = JSRedBook;
 			sourceTree = "<group>";
