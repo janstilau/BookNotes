@@ -462,10 +462,104 @@ _.compact = function(array) {
     return _.filter(array, _.identity);
 };
 
+var flatten = function(input, shallow, strict, output) {
+    if (shallow && _.every(input, _.isArray)) {
+        return concat.apply(output, input);
+    }
+    for (var i = 0, length = input.length; i < length; i++) {
+        var value = input[i];
+        if (!_.isArray(value) && !_.isArguments(value)) {
+            if (!strict) output.push(value);
+        } else if (shallow) {
+            push.apply(output, value);
+        } else {
+            flatten(value, shallow, strict, output);
+        }
+    }
+    return output;
+};
+
+_.difference = function(array) {
+    var rest = flatten(slice.call(arguments, 1), true, true, []);
+    return _.filter(array, function(value) {
+        return _.contains(rest, value);
+    });
+};
+
+_.without = function(array) {
+    return _.difference(array, slice.call(arguments, 1));
+};
+
+_.flatten = function(array, shallow) {
+    return flatten(array, shallow, false, []);
+}
+
+_.partition = function(obj, predicate, context) {
+    predicate = lookupIterator(predicate);
+    var pass = [],
+        fail = [];
+    each(obj, function(ele){
+        (predicate.call(context, ele) ? pass: fail).push(ele);
+    });
+
+    return [pass, fail];
+}
+
+_.isArguments = function(obj) {
+    return obj && _.has(obj, 'callee');
+};
+
+_.uniq = _.unique = function(array, isSorted, iterator, context) {
+    if (array == null) return [];
+    if (_.isFunction(isSorted)) {
+        context = iterator;
+        iterator = isSorted;
+        isSorted = false;
+    }
+
+    var result = [],
+        seen = [];
+    for (var i = 0, length = array.length; i < length; i++) {
+        var value = array[i];
+        if (iterator) value = iterator.call(context, value, i, array);
+        if (isSorted? (!i || seen !== value) : !_.contains(seen, value)) {
+            if (isSorted) seen = value;
+            else seen.push(value);
+            result.push(array[i]);
+        }
+    }
+}
+
+_.union = function() {
+    return _.uniq(flatten(arguments, true, true, []));
+}
+
+_.intersection = function(array) {
+    var rest = slice.call(arguments, 1);
+    return _.filter(_.uniq(array), function(item){
+        return _.every(rest, function(other){
+            return _.contains(other, item);
+        });
+    }); 
+}
+
+_.object = function(list, values) {
+    if (list == null) return {};
+    var result = {};
+    for (var i = 0, length = list.length; i < length; i++) {
+        if (values) {
+            result[list[i]] = values[i];
+        } else {
+            result[list[i][0]] = list[i][1];
+        }
+    }
+    return result;
+};
+
+
 
 console.log("begin");
 var array = [1, 2, 3, 4, 5, 6];
-console.log(_.last(array, 10));
 
 
 
@@ -476,8 +570,10 @@ function Person(name, age) {
 
 var text = "niubidehehe"
 var actionArray = _.map(text, _.identity);
-console.log(actionArray);
 
 var single = new Person("jansti", 1);
 var compared = new Person("apple", 2);
 var third = new Person("third", 3);
+
+console.log(Person.arguments);
+console.log(Person[1]);
