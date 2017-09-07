@@ -25,7 +25,11 @@ var
     nativeKeys = Object.keys,
     nativeBind = FuncProto.bind;
 
-var _ = function() {};
+var _ = function(obj) {
+    if (obj instanceof _) return obj;
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+};
 root._ = _;
 
 // 这里的iterator模仿array.forEach里的forEach中的闭包,需要三个参数,1element,2elementIndex,3array本身.
@@ -498,8 +502,8 @@ _.partition = function(obj, predicate, context) {
     predicate = lookupIterator(predicate);
     var pass = [],
         fail = [];
-    each(obj, function(ele){
-        (predicate.call(context, ele) ? pass: fail).push(ele);
+    each(obj, function(ele) {
+        (predicate.call(context, ele) ? pass : fail).push(ele);
     });
 
     return [pass, fail];
@@ -522,7 +526,7 @@ _.uniq = _.unique = function(array, isSorted, iterator, context) {
     for (var i = 0, length = array.length; i < length; i++) {
         var value = array[i];
         if (iterator) value = iterator.call(context, value, i, array);
-        if (isSorted? (!i || seen !== value) : !_.contains(seen, value)) {
+        if (isSorted ? (!i || seen !== value) : !_.contains(seen, value)) {
             if (isSorted) seen = value;
             else seen.push(value);
             result.push(array[i]);
@@ -536,11 +540,11 @@ _.union = function() {
 
 _.intersection = function(array) {
     var rest = slice.call(arguments, 1);
-    return _.filter(_.uniq(array), function(item){
-        return _.every(rest, function(other){
+    return _.filter(_.uniq(array), function(item) {
+        return _.every(rest, function(other) {
             return _.contains(other, item);
         });
-    }); 
+    });
 }
 
 _.object = function(list, values) {
@@ -556,12 +560,407 @@ _.object = function(list, values) {
     return result;
 };
 
+_.indexOf = function(array, item, isSorted) {
+    if (array == null) return -1;
+    var i = 0,
+        length = array.length;
+    if (isSorted) {
+        if (typeof isSorted == 'number') {
+            i = (isSorted < 0 ? Math.max(0, length + isSorted) : isSorted);
+        } else {
+            i = _.sortedIndex(array, item);
+            return array[i] === item ? i : -1;
+        }
+    }
+    if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item, isSorted);
+    for (; i < length; i++)
+        if (array[i] === item) return i;
+    return -1;
+};
+
+_.lastIndexOf = function(array, item, from) {
+    if (array == null) return -1;
+    var hasIndex = from != null;
+    if (nativeLastIndexOf && array.lastIndexOf === nativeLastIndexOf) {
+        return hasIndex ? array.lastIndexOf(item, from) : array.lastIndexOf(item);
+    }
+    var i = (hasIndex ? from : array.length);
+    while (i--)
+        if (array[i] === item) return i;
+    return -1;
+};
+
+_.values = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var values = new Array(length);
+    for (var i = 0; i < length; i++) {
+        values[i] = obj[keys[i]];
+    }
+    return values;
+};
+
+_.pairs = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var pairs = new Array(length);
+    for (var i = 0; i < length; i++) {
+        pairs[i] = [keys[i], obj[keys[i]]];
+    }
+    return pairs;
+};
+
+_.invert = function(obj) {
+    var result = {};
+    var keys = _.keys(obj);
+    for (var i = 0, length = keys.length; i < length; i++) {
+        result[obj[keys[i]]] = keys[i];
+    }
+    return result;
+};
+
+_.functions = _.methods = function(obj) {
+    var names = [];
+    for (var key in obj) {
+        if (_.isFunction(obj[key])) names.push(key);
+    }
+    return names.sort();
+};
+
+_.range = function(start, stop, step) {
+    if (arguments.length <= 1) {
+        stop = start || 0;
+        start = 0;
+    }
+    step = arguments[2] || 1;
+
+    var length = Math.max(Math.ceil((stop - start) / step), 0);
+    var idx = 0;
+    var range = new Array(length);
+
+    while (idx < length) {
+        range[idx++] = start;
+        start += step;
+    }
+
+    return range;
+};
+
+_.bind = function(func, context) {
+    if (!_.isFunction(func)) throw new TypeError;
+    if (nativeBind && func.bind === nativeBind) {
+        return nativeBind.apply(func, slice.call(arguments, 1));
+    }
+    var args, bound;
+    args = slice.call(arguments, 2);
+
+    bound = function() { // 根据这里我们可以看出来,在bind了之后返回的func在调用的时候,总是把this绑定到context上面了.就算用apply.
+        if (!(this instanceof bound)) return func.apply(context, args.concat(slice.call(arguments)));
+        // bind之后的方法当做构造函数之后. 如果bound后面被当做构造函数来处理,那么this instance bound 就会返回true.
+        // 而原生bind的处理是,忽略原来的context,后面的参数传入func中当做构造函数的参数.下面的处理就是在模拟生成新的对象,在这个对象上调用this的赋值语句的过程.
+        ctor.prototype = func.prototype;
+        var self = new ctor;
+        ctor.prototype = null;
+        var result = func.apply(self, args.concat(slice.call(arguments)));
+        if (Object(result) === result) return result;
+        return self;
+    };
+    return bound;
+}
+
+_.partial = function(func) {
+    var boundArgs = slice.call(arguments, 1);
+    return function() {
+        var position = 0;
+        var args = boundArgs.slice();
+        for (var i = 0, length = args.length; i < length; i++) {
+            if (args[i] === _) args[i] = arguments[position++];
+        }
+        while (position < arguments.length) args.push(arguments[position++]);
+        return func.apply(this, args);
+    };
+};
+
+_.bindAll = function(obj) {
+    var funcs = slice.call(arguments, 1);
+    if (funcs.length === 0) throw new Error('bindAll must be passed function names');
+    each(funcs, function(f) { obj[f] = _.bind(obj[f], obj); });
+    return obj;
+};
+
+_.memoize = function(func, hasher) {
+    var memo = {};
+    hasher || (hasher = _.identity);
+    return function() {
+        var key = hasher.apply(this, arguments);
+        return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this, arguments));
+    };
+};
+
+_.once = function(func) {
+    var ran = false;
+    memo;
+    return function() {
+        if (ran) return memo;
+        ran = true;
+        memo = func.apply(this, arguments);
+        func = null;
+        return memo;
+    }
+}
+
+_.wrap = function(func, wrapper) {
+    return _.partial(wrapper, func);
+};
+
+_.compose = function() {
+    var funcs = arguments;
+    return function() {
+        var args = arguments;
+        for (var i = funcs.length - 1; i >= 0; i--) {
+            args = [funcs[i].apply(this, args)];
+        }
+        return args[0];
+    };
+};
+
+
+_.extend = function(obj) {
+    each(slice.call(arguments, 1), function(source) {
+        if (source) {
+            for (var prop in source) {
+                obj[prop] = source[prop];
+            }
+        }
+    });
+    return obj;
+};
+
+_.pick = function(obj, iterator, context) {
+    var result = {};
+    if (_.isFunction(iterator)) {
+        for (var key in obj) {
+            var value = obj[key];
+            if (iterator.call(context, value, key, obj)) result[key] = value;
+        }
+    } else {
+        var keys = concat.apply([], slice.call(arguments, 1));
+        for (var i = 0, length = keys.length; i < length; i++) {
+            var key = keys[i];
+            if (key in obj) result[key] = obj[key];
+        }
+    }
+    return result;
+};
+
+_.omit = function(obj, iterator, context) {
+    var keys;
+    if (_.isFunction(iterator)) {
+        iterator = _.negate(iterator);
+    } else {
+        keys = _.map(concat.apply([], slice.call(arguments, 1)), String); // String 是作为iterator传进去的.!!!!
+        iterator = function(value, key) { return !_.contains(keys, key); };
+    }
+    return _.pick(obj, iterator, context);
+};
+
+_.clone = function(obj) {
+    if (!_.isObject(obj)) return obj;
+    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
+};
+
+_.tap = function(obj, interceptor) {
+    interceptor(obj);
+    return obj;
+};
+
+_.isEmpty = function(obj) {
+    if (obj == null) return true;
+    if (_.isArray(obj) || _.isString(obj)) return obj.length === 0;
+    for (var key in obj)
+        if (_.has(obj, key)) return false;
+    return true;
+};
+
+// Is a given value a DOM element?
+_.isElement = function(obj) {
+    return !!(obj && obj.nodeType === 1);
+};
+
+_.isArray = nativeIsArray || function(obj) {
+    return toString.call(obj) == '[object Array]';
+};
+
+// Is a given variable an object?
+_.isObject = function(obj) {
+    return obj === Object(obj);
+};
+
+// Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp.
+each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
+    _['is' + name] = function(obj) {
+        return toString.call(obj) == '[object ' + name + ']';
+    };
+});
+
+// Define a fallback version of the method in browsers (ahem, IE), where
+// there isn't any inspectable "Arguments" type.
+if (!_.isArguments(arguments)) {
+    _.isArguments = function(obj) {
+        return !!(obj && _.has(obj, 'callee'));
+    };
+}
+
+// Optimize `isFunction` if appropriate.
+if (typeof(/./) !== 'function') {
+    _.isFunction = function(obj) {
+        return typeof obj === 'function';
+    };
+}
+
+// Is a given object a finite number?
+_.isFinite = function(obj) {
+    return isFinite(obj) && !isNaN(parseFloat(obj));
+};
+
+// Is the given value `NaN`? (NaN is the only number which does not equal itself).
+_.isNaN = function(obj) {
+    return _.isNumber(obj) && obj != +obj;
+};
+
+// Is a given value a boolean?
+_.isBoolean = function(obj) {
+    return obj === true || obj === false || toString.call(obj) == '[object Boolean]';
+};
+
+// Is a given value equal to null?
+_.isNull = function(obj) {
+    return obj === null;
+};
+
+// Is a given variable undefined?
+_.isUndefined = function(obj) {
+    return obj === void 0;
+};
+
+// Shortcut function for checking if an object has a given property directly
+// on itself (in other words, not on a prototype).
+_.has = function(obj, key) {
+    return hasOwnProperty.call(obj, key);
+};
+
+var eq = function(a, b, aStack, bStack) {
+    // Identical objects are equal. `0 === -0`, but they aren't identical.
+    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+    if (a === b) return a !== 0 || 1 / a == 1 / b;
+    // A strict comparison is necessary because `null == undefined`.
+    if (a == null || b == null) return a === b;
+    // Unwrap any wrapped objects.
+    if (a instanceof _) a = a._wrapped;
+    if (b instanceof _) b = b._wrapped;
+    // Compare `[[Class]]` names.
+    var className = toString.call(a);
+    if (className != toString.call(b)) return false;
+    switch (className) {
+        // Strings, numbers, dates, and booleans are compared by value.
+        case '[object String]':
+            // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+            // equivalent to `new String("5")`.
+            return a == String(b);
+        case '[object Number]':
+            // `NaN`s are equivalent, but non-reflexive. An `egal` comparison is performed for
+            // other numeric values.
+            return a != +a ? b != +b : (a == 0 ? 1 / a == 1 / b : a == +b);
+        case '[object Date]':
+        case '[object Boolean]':
+            // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+            // millisecond representations. Note that invalid dates with millisecond representations
+            // of `NaN` are not equivalent.
+            return +a == +b;
+            // RegExps are compared by their source patterns and flags.
+        case '[object RegExp]':
+            return a.source == b.source &&
+                a.global == b.global &&
+                a.multiline == b.multiline &&
+                a.ignoreCase == b.ignoreCase;
+    }
+    if (typeof a != 'object' || typeof b != 'object') return false;
+    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+    var length = aStack.length;
+    while (length--) {
+        // Linear search. Performance is inversely proportional to the number of
+        // unique nested structures.
+        if (aStack[length] == a) return bStack[length] == b;
+    }
+    // Objects with different constructors are not equivalent, but `Object`s
+    // from different frames are.
+    var aCtor = a.constructor,
+        bCtor = b.constructor;
+    if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
+            _.isFunction(bCtor) && (bCtor instanceof bCtor)) &&
+        ('constructor' in a && 'constructor' in b)) {
+        return false;
+    }
+    // Add the first object to the stack of traversed objects.
+    aStack.push(a);
+    bStack.push(b);
+    var size = 0,
+        result = true;
+    // Recursively compare objects and arrays.
+    if (className == '[object Array]') {
+        // Compare array lengths to determine if a deep comparison is necessary.
+        size = a.length;
+        result = size == b.length;
+        if (result) {
+            // Deep compare the contents, ignoring non-numeric properties.
+            while (size--) {
+                if (!(result = eq(a[size], b[size], aStack, bStack))) break;
+            }
+        }
+    } else {
+        // Deep compare objects.
+        for (var key in a) {
+            if (_.has(a, key)) {
+                // Count the expected number of properties.
+                size++;
+                // Deep compare each member.
+                if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
+            }
+        }
+        // Ensure that both objects contain the same number of properties.
+        if (result) {
+            for (key in b) {
+                if (_.has(b, key) && !(size--)) break;
+            }
+            result = !size;
+        }
+    }
+    // Remove the first object from the stack of traversed objects.
+    aStack.pop();
+    bStack.pop();
+    return result;
+};
+
+// Perform a deep comparison to check if two objects are equal.
+_.isEqual = function(a, b) {
+    return eq(a, b, [], []);
+};
+
+// Add a "chain" function, which will delegate to the wrapper.
+_.chain = function(obj) {
+    return _(obj).chain();
+};
+
 
 
 console.log("begin");
 var array = [1, 2, 3, 4, 5, 6];
+var getRange = _.range(0, -12, -3);
 
-
+function demoSlice() {
+    return Array.prototype.slice(arguments);
+}
 
 function Person(name, age) {
     this.name = name;
@@ -575,5 +974,18 @@ var single = new Person("jansti", 1);
 var compared = new Person("apple", 2);
 var third = new Person("third", 3);
 
-console.log(Person.arguments);
-console.log(Person[1]);
+var demo = {
+    name: "demoName"
+};
+var another = {
+    name: "anotherName"
+};
+
+function sayHi(age, score) {
+    console.log(this instanceof sayHi);
+    this.ageI = age;
+    this.scoreI = score;
+}
+var boundSayHi = sayHi.bind(demo, 10);
+var sayHiInstance = new boundSayHi();
+console.log(sayHiInstance instanceof Function);
