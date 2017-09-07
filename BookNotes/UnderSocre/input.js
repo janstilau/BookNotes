@@ -1,16 +1,8 @@
-
-
-
-function actionMake() {
-    var a = 100;
-    return function () {
-        console.log(a);
-    };
+var Person = function() {
+    this.name = "xiaoming";
 }
-
-function sayHi(action) {
-    var a = 1000;
-    action();
+Person.sayHi = function() {
+    console.log('hi');
 }
-sayHi(actionMake());
-
+var temp = new Person();
+console.log(temp);
