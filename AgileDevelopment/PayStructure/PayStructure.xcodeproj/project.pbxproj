@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		15B685091F63EA7F008787EE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B685081F63EA7F008787EE /* main.m */; };
+		15F91E321F653FA100E6123E /* Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 15F91E311F653FA100E6123E /* Transaction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +27,8 @@
 		15B685051F63EA7F008787EE /* PayStructure */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PayStructure; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B685081F63EA7F008787EE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		15B6850F1F63EE0C008787EE /* Pay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pay.h; sourceTree = "<group>"; };
+		15F91E301F653FA100E6123E /* Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transaction.h; sourceTree = "<group>"; };
+		15F91E311F653FA100E6123E /* Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transaction.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,8 @@
 			children = (
 				15B685081F63EA7F008787EE /* main.m */,
 				15B6850F1F63EE0C008787EE /* Pay.h */,
+				15F91E301F653FA100E6123E /* Transaction.h */,
+				15F91E311F653FA100E6123E /* Transaction.m */,
 			);
 			path = PayStructure;
 			sourceTree = "<group>";
@@ -122,6 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15F91E321F653FA100E6123E /* Transaction.m in Sources */,
 				15B685091F63EA7F008787EE /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,6 +259,7 @@
 				15B6850E1F63EA7F008787EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
