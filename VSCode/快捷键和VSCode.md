@@ -1,6 +1,8 @@
 ##### 熟练掌握一个编辑器要比所有的编辑器都有设计有效的多
 
-# 快捷键
+# 快捷键   
+
+https://code.visualstudio.com/docs/getstarted/userinterface
 
 ## 公用快捷键
 
