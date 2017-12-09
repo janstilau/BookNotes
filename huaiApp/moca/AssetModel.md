@@ -1,0 +1,3 @@
+# AssetModel
+
+这是一个表示照片数据的类, 在新一代的iOS中, 照片已经是需要用PHAsset使用了, 并且现在版本过去已经过去这么多, 需要用到ALAsset的机会越来越少了. 但这种包装的思想应该一直在. 在获取这些Assets的时候, 是在USImagePicker中, 在那个类里面, 根据宏判断, 最后传出来的会根据系统版本情况传入不同的AssetModel, 或者是ALAsset的数据, 或者是PHAsset的数据. 但是只要被AssetModel包装了之后, 就可以直接通过AssetModel去取数据了. 因为在初始化的过程中, 通过不同的函数调用, 将值取出来了存储到了AssetModel这个包装类中了. 而它其中保存一个id asset, 在ALAsset和PHAsset的分类扩展中, 定义了相同的方法名, 可以直接用asset 调用, 这样就实现了对于底层不同类实现的掩盖, 在使用的时候, 不用管底层到底是什么数据结构. 用一套API就可以.
