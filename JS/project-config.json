@@ -1,0 +1,53 @@
+{
+    "groupSetting": {
+        "common": {
+            "id": 0,
+            "parentGroup": -1
+        }
+    },
+    "propertySetting": {
+        "city-show-label": {
+            "id": 0,
+            "readOnly": false,
+            "type": 1,
+            "defaultValue": "",
+            "visible": "false",
+            "groupId": 0,
+            "value": "${x, y} ${attackLevel 等级}"
+        },
+        "export-hide-layers": {
+            "id": 1,
+            "readOnly": false,
+            "type": 2,
+            "defaultValue": [],
+            "visible": "false",
+            "groupId": 0,
+            "value": ["res"]
+        },
+        "complicated-object": {
+            "id": 2,
+            "readOnly": false,
+            "type": 3,// person
+            "defaultValue": {
+                "name": "jansti",
+                "age": 12,
+                "hobby": "sleeping",
+                "project": {
+                    "weekday": "work",
+                    "weedend": "leisurely time"
+                }
+            },
+            "visible": "false",
+            "groupId": 0,
+            "value": {
+                "name": "jansti",
+                "age": 12,
+                "hobby": "sleeping",
+                "project": {
+                    "weekday": "work normal",
+                    "weedend": "work slow"
+                }
+            }
+        }
+    }
+}
