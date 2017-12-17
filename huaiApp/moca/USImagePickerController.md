@@ -43,6 +43,12 @@ PHPhotoLibraryClass 这个宏用到了几次呢, 两次, 就是在setupGroup的�
 
 ## USAssetViewController
 
-[self setupAssets] 这个方法, 就是用刚刚Gourp穿过来的group数据进行遍历, 如果是PH用PH的方法, 如果AL的用AL的方法, 在取得值之后, 进行了一次过滤, 这个过滤是过滤identifier在picker的filterImage里面的, 而这个值, 是应该在这个USImagePickerController生成的时候, 赋值过来的.
+[self setupAssets] 这个方法, 就是用刚刚Gourp传过来的group数据进行遍历, 如果是PH用PH的方法, 如果AL的用AL的方法, 在取得值之后, 进行了一次过滤, 这个过滤是过滤identifier在picker的filterImage里面的, 而这个值, 是应该在这个USImagePickerController生成的时候, 赋值过来的.
 
-看不下去了, 看别的
+这里其实用到了oc的给nil发消息无效的特点了, ph的情况下, PHCachingImageManager会被在上一步的group环境里面被赋值, 而al环境下, 这个值是没有的, 但是在AssetVC中, 直接对这个属性发消息, 因为如果是nil, 没有副作用, 所以这里不用专门判断nil.
+
+最开始的navigationVC的filteredImageList在这里被用到了, 之所以有这个需求当时是, 在选择大量的图片后, 需要替换的时候, 用户是记不得选择了哪些图片的, 所以要将已经选择的传入, 将已经选择的图片在第一个section中列出来. 这个过程是在setupAssets中实现的.
+
+之前的代码, 有很多用accessibilily作为检测的时候, 这个习惯很不好, 因为通过这个量, 没有办法判断代码的意图.
+
+里面的代码有很多的业务代码, 没有细细的看, 不过, 这个类库的目的就是将不同系统版本的操作兼容, 在group中用到了一些宏定义, 而后面的操作则是通过指针的判断进行的. 在选择图片的过程中, 有很多的判断, 例如照片损坏与否, 照片尺寸, 照片个数等等, 这些都要在相应操作的时候进行处理. 此外, 还有PHImageCacheManager的缓存的管理.
