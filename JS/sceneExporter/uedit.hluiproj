@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<View id="" clsn="UView" pn="" nn="View" locked="1" x="0" y="0" xr="0" yr="0" w="480" h="320" bgc="rgb(255, 255, 255)" srw="480" srh="320">
+    <View id="" clsn="UView" pn="" nn="View" x="64" y="48" xr="0" yr="0" w="260" h="198" bgc="rgb(255, 255, 255)" srw="480" srh="320">
+        <ImageView id="" clsn="UImageView" pn="" nn="ImageView" x="44" y="56" xr="0" yr="0" w="100" h="100" bgc="rgb(255, 255, 255)" i="4.png" ic="0,0,0,0" tc="rgb(255, 255, 255)" bri="1" srw="480" srh="320"/>
+    </View>
+    <Label id="" clsn="ULabel" pn="" nn="Label" x="308" y="56" xr="0" yr="0" w="100" h="30" bgc="rgb(255, 255, 255)" t="ThisIsALabel" ts="15" tctl="rgb(255, 255, 255)" tctr="rgb(255, 255, 255)" tcbl="rgb(255, 255, 255)" tcbr="rgb(255, 255, 255)" sc="rgb(0, 0, 0)" ta="18" srw="480" srh="320"/>
+</View>

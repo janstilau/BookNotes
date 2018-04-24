@@ -1,0 +1,343 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2017-01-09T11:24:52
+#
+#-------------------------------------------------
+
+TARGET = hScene
+TEMPLATE = app
+
+#-------------------------------------------------
+#      libs
+#-------------------------------------------------
+include(libs/qtpropertybrowser/src/qtpropertybrowser.pri)
+include(libs/quazip/quazip.pri)
+
+QT += core gui opengl xml
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+win32 {
+    LIB_OPENGL32="$$_PRO_FILE_PWD_\libs\OPENGL32.lib"
+    !exists($$LIB_OPENGL32): error ("Not existing $$LIB_OPENGL32")
+    LIBS+= $$LIB_OPENGL32
+
+    LIB_GLU32="$$_PRO_FILE_PWD_\libs\GLU32.lib"
+    !exists($$LIB_GLU32): error ("Not existing $$LIB_GLU32")
+    LIBS+= $$LIB_GLU32
+}
+#-------------------------------------------------
+#      macros
+#-------------------------------------------------
+debug: DEFINES += HOOLAI_DEBUG
+
+release: DEFINES += HOOLAI_RELEASE
+
+#-------------------------------------------------
+#      include paths
+#-------------------------------------------------
+
+INCLUDEPATH += $$_PRO_FILE_PWD_/libs/qtpropertybrowser \
+    $$_PRO_FILE_PWD_/libs/quazip \
+    $$_PRO_FILE_PWD_/src \
+    $$_PRO_FILE_PWD_/src/action \
+    $$_PRO_FILE_PWD_/src/action/command \
+    $$_PRO_FILE_PWD_/src/attributed \
+    $$_PRO_FILE_PWD_/src/attributed/templateloader \
+    $$_PRO_FILE_PWD_/src/data \
+    $$_PRO_FILE_PWD_/src/data/element \
+    $$_PRO_FILE_PWD_/src/data/resourcemanager \
+    $$_PRO_FILE_PWD_/src/business \
+    $$_PRO_FILE_PWD_/src/libs/protobuf/src \
+    $$_PRO_FILE_PWD_/src/serializer \
+    $$_PRO_FILE_PWD_/src/ui \
+    $$_PRO_FILE_PWD_/src/ui/control \
+    $$_PRO_FILE_PWD_/src/ui/dialog   \
+    $$_PRO_FILE_PWD_/src/ui/painter \
+    $$_PRO_FILE_PWD_/src/ui/panel \
+    $$_PRO_FILE_PWD_/src/ui/panel/resourcepanel \
+    $$_PRO_FILE_PWD_/src/ui/tool \
+    $$_PRO_FILE_PWD_/src/util
+
+#-------------------------------------------------
+#      precompile header
+#-------------------------------------------------
+
+CONFIG += precompile_header
+PRECOMPILED_HEADER = src/util/commonmacros.h
+
+
+#-------------------------------------------------
+#      files
+#-------------------------------------------------
+SOURCES += src/main.cpp\
+    src/action/actiongroup.cpp \
+    src/action/actionmanager.cpp \
+    src/action/command/elementaddcommand.cpp \
+    src/action/command/elementaligncommand.cpp \
+    src/action/command/elementchangepropertycommand.cpp \
+    src/action/command/elementchangetreepositioncommand.cpp \
+    src/action/command/elementmovecommand.cpp \
+    src/action/command/elementremovecommand.cpp \
+    src/action/command/elementresizecommand.cpp \
+    src/action/command/elementselectcommand.cpp \
+    src/action/command/elementsetsamesizecommand.cpp \
+    src/action/command/imageaddcommand.cpp \
+    src/action/command/udocumentundocommand.cpp \
+    src/action/editactions.cpp \
+    src/action/fileactions.cpp \
+    src/action/objectactions.cpp \
+    src/action/viewactions.cpp \
+    src/appconfig.cpp \
+    src/attributed/attribute.cpp \
+    src/attributed/attributebool.cpp \
+    src/attributed/attributedatalist.cpp \
+    src/attributed/attributedobject.cpp \
+    src/attributed/attributeenum.cpp \
+    src/attributed/attributefloat.cpp \
+    src/attributed/attributeint.cpp \
+    src/attributed/attributemap.cpp \
+    src/attributed/attributenullablefloat.cpp \
+    src/attributed/attributenullableint.cpp \
+    src/attributed/attributeobjectid.cpp \
+    src/attributed/attributeoption.cpp \
+    src/attributed/attributeoptiongroup.cpp \
+    src/attributed/attributepath.cpp \
+    src/attributed/attributepathlist.cpp \
+    src/attributed/attributestring.cpp \
+    src/attributed/attributetemplatemanager.cpp \
+    src/attributed/enumobject.cpp \
+    src/attributed/templateloader/templateloader.cpp \
+    src/attributed/templateloader/templateloaderbasetype.cpp \
+    src/attributed/templateloader/templateloaderenum.cpp \
+    src/attributed/templateloader/templateloaderobject.cpp \
+    src/attributed/templateloader/templateloaderoptiongroup.cpp \
+    src/attributed/templateloader/templateloadertype.cpp \
+    src/attributed/variantutil.cpp \
+    src/data/attributedobjectmanager.cpp \
+    src/data/docmanager.cpp \
+    src/data/element/ubutton.cpp \
+    src/data/element/ucomponent.cpp \
+    src/data/element/udocument.cpp \
+    src/data/element/ueditbox.cpp \
+    src/data/element/uelement.cpp \
+    src/data/element/uelementfactory.cpp \
+    src/data/element/uelementproperty.cpp \
+    src/data/element/ugroup.cpp \
+    src/data/element/uimage.cpp \
+    src/data/element/ulabel.cpp \
+    src/data/element/uscrollview.cpp \
+    src/data/element/uview.cpp \
+    src/data/path.cpp \
+    src/data/resourcemanager/resourcemanager.cpp \
+    src/data/resourcemanager/searchthread.cpp \
+    src/mainwindow.cpp \
+    src/serializer/filepack.cpp \
+    src/serializer/udocumenttoxml.cpp \
+    src/serializer/uelementmimedata.cpp \
+    src/serializer/xmltools.cpp \
+    src/uapplication.cpp \
+    src/ui/control/propertiestree.cpp \
+    src/ui/control/ruler.cpp \
+    src/ui/control/transparentpanel.cpp \
+    src/ui/painter/baserenderer.cpp \
+    src/ui/painter/glimage.cpp \
+    src/ui/painter/glpainter.cpp \
+    src/ui/painter/glrectangle.cpp \
+    src/ui/painter/udocumentpainter.cpp \
+    src/ui/panel/doccanvas.cpp \
+    src/ui/panel/docpanel.cpp \
+    src/ui/panel/docwindow.cpp \
+    src/ui/panel/objectspanel.cpp \
+    src/ui/panel/objectsview.cpp \
+    src/ui/panel/propertiespanel.cpp \
+    src/ui/panel/resourcepanel/resourcecell.cpp \
+    src/ui/panel/resourcepanel/resourcepanel.cpp \
+    src/ui/panel/resourcepanel/resourcepreviewer.cpp \
+    src/ui/panel/resourcepanel/resouredirsview.cpp \
+    src/ui/panel/undopanel.cpp \
+    src/ui/panelmanager.cpp \
+    src/ui/tool/mousetool.cpp \
+    src/ui/tool/movetool.cpp \
+    src/ui/tool/resizetool.cpp \
+    src/ui/tool/selecttool.cpp \
+    src/ui/tool/toolmanager.cpp \
+    src/util/appconfigutl.cpp \
+    src/util/defer.cpp \
+    src/util/fileutil.cpp \
+    src/util/numberutil.cpp \
+    src/util/printutil.cpp \
+    src/util/printutildeserialization.cpp \
+    src/util/printutilserialization.cpp \
+    src/util/serializerutil.cpp \
+    src/util/uelementutil.cpp \
+    src/util/windowutil.cpp \
+    src/action/command/cmdimageupdatepath.cpp \
+    src/ui/painter/glline.cpp \
+    src/business/imageinfoexporter.cpp \
+    src/action/command/cmdupdatedocumentproperty.cpp \
+    src/data/element/ulayer.cpp \
+    src/ui/coordinatesystem.cpp \
+    src/ui/control/auxiliaryline.cpp \
+    src/ui/tool/keyboardtool.cpp
+
+HEADERS  += src/mainwindow.h \
+    src/action/actiondefines.h \
+    src/action/actiongroup.h \
+    src/action/actionmanager.h \
+    src/action/command/elementaddcommand.h \
+    src/action/command/elementaligncommand.h \
+    src/action/command/elementchangepropertycommand.h \
+    src/action/command/elementchangetreepositioncommand.h \
+    src/action/command/elementmovecommand.h \
+    src/action/command/elementremovecommand.h \
+    src/action/command/elementresizecommand.h \
+    src/action/command/elementselectcommand.h \
+    src/action/command/elementsetsamesizecommand.h \
+    src/action/command/imageaddcommand.h \
+    src/action/command/udocumentundocommand.h \
+    src/action/editactions.h \
+    src/action/fileactions.h \
+    src/action/objectactions.h \
+    src/action/viewactions.h \
+    src/appconfig.h \
+    src/attributed/attribute.h \
+    src/attributed/attributebool.h \
+    src/attributed/attributedatalist.h \
+    src/attributed/attributedobject.h \
+    src/attributed/attributedobjectdefine.h \
+    src/attributed/attributeenum.h \
+    src/attributed/attributefloat.h \
+    src/attributed/attributeint.h \
+    src/attributed/attributemap.h \
+    src/attributed/attributenullablefloat.h \
+    src/attributed/attributenullableint.h \
+    src/attributed/attributeobjectid.h \
+    src/attributed/attributeoption.h \
+    src/attributed/attributeoptiongroup.h \
+    src/attributed/attributepath.h \
+    src/attributed/attributepathlist.h \
+    src/attributed/attributestring.h \
+    src/attributed/attributetemplatemanager.h \
+    src/attributed/attributetype.h \
+    src/attributed/enumobject.h \
+    src/attributed/idatalistprovider.h \
+    src/attributed/templateloader/templateloader.h \
+    src/attributed/templateloader/templateloaderbasetype.h \
+    src/attributed/templateloader/templateloaderenum.h \
+    src/attributed/templateloader/templateloaderobject.h \
+    src/attributed/templateloader/templateloaderoptiongroup.h \
+    src/attributed/templateloader/templateloadertype.h \
+    src/attributed/variantutil.h \
+    src/data/attributedobjectmanager.h \
+    src/data/datadefine.h \
+    src/data/docmanager.h \
+    src/data/element/iuelementfactory.h \
+    src/data/element/ubutton.h \
+    src/data/element/ucomponent.h \
+    src/data/element/udocument.h \
+    src/data/element/ueditbox.h \
+    src/data/element/uelement.h \
+    src/data/element/uelementfactory.h \
+    src/data/element/uelementproperty.h \
+    src/data/element/ugroup.h \
+    src/data/element/uimage.h \
+    src/data/element/ulabel.h \
+    src/data/element/uscrollview.h \
+    src/data/element/uview.h \
+    src/data/path.h \
+    src/data/propertysetting.h \
+    src/data/resourcemanager/resourcemanager.h \
+    src/data/resourcemanager/searchthread.h \
+    src/serializer/filepack.h \
+    src/serializer/udocumenttoxml.h \
+    src/serializer/uelementmimedata.h \
+    src/serializer/xmltools.h \
+    src/uapplication.h \
+    src/ui/control/propertiestree.h \
+    src/ui/control/ruler.h \
+    src/ui/control/transparentpanel.h \
+    src/ui/painter/baserenderer.h \
+    src/ui/painter/glimage.h \
+    src/ui/painter/glpainter.h \
+    src/ui/painter/glrectangle.h \
+    src/ui/painter/udocumentpainter.h \
+    src/ui/panel/doccanvas.h \
+    src/ui/panel/docpanel.h \
+    src/ui/panel/docwindow.h \
+    src/ui/panel/objectspanel.h \
+    src/ui/panel/objectsview.h \
+    src/ui/panel/propertiespanel.h \
+    src/ui/panel/resourcepanel/resourcecell.h \
+    src/ui/panel/resourcepanel/resourcepanel.h \
+    src/ui/panel/resourcepanel/resourcepreviewer.h \
+    src/ui/panel/resourcepanel/resouredirsview.h \
+    src/ui/panel/undopanel.h \
+    src/ui/panelmanager.h \
+    src/ui/tool/mousetool.h \
+    src/ui/tool/movetool.h \
+    src/ui/tool/resizetool.h \
+    src/ui/tool/selecttool.h \
+    src/ui/tool/toolmanager.h \
+    src/util/appconfigutl.h \
+    src/util/commonmacros.h \
+    src/util/defer.h \
+    src/util/fileutil.h \
+    src/util/numberutil.h \
+    src/util/printutil.h \
+    src/util/serializerutil.h \
+    src/util/uelementutil.h \
+    src/util/windowutil.h \
+    src/action/command/cmdimageupdatepath.h \
+    src/util/datacache.h \
+    src/ui/painter/glline.h \
+    src/business/imageinfoexporter.h \
+    src/action/command/cmdupdatedocumentproperty.h \
+    src/data/element/ulayer.h \
+    src/ui/coordinatesystem.h \
+    src/ui/control/auxiliaryline.h \
+    src/ui/tool/keyboardtool.h
+
+FORMS += src/mainwindow.ui
+
+RESOURCES += \
+    src/resource.qrc
+
+TRANSLATIONS = src/translation/hscene_zh.ts
+
+QMAKE_POST_LINK += $$[QT_INSTALL_BINS]/lrelease /Users/jansti/RepositoryForHL/hScene/src/translation/hscene_zh.ts -qm /Users/jansti/RepositoryForHL/hScene/src/translation/hscene_zh.qm
+#QMAKE_POST_LINK += touch /Users/jansti/RepositoryForHL/a.txt
+message($$OUT_PWD)
+#message($$_PRO_FILE_)
+#message($$_PRO_FILE_PWD_)
+
+#TARGET_DIR = hScene.app/Contents/Translations
+#updateqm.input = TRANSLATIONS
+#updateqm.output = $$OUT_PWD/$$TARGET_DIR/${QMAKE_FILE_BASE}.qm
+#isEmpty(vcproj):updateqm.variable_out = PRE_TARGETDEPS
+#updateqm.commands = $$[QT_INSTALL_BINS]/lrelease ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_OUT}
+#updateqm.name = LRELEASE ${QMAKE_FILE_IN}
+#updateqm.CONFIG += no_links
+#QMAKE_EXTRA_COMPILERS += updateqm
+
+#mytarget.target = .buildfile
+#mytarget.commands = $$[QT_INSTALL_BINS]/lrelease /Users/jansti/RepositoryForHL/hScene/src/translation/hscene_zh.ts -qm $$OUT_PWD/hScene.app/Contents/Translations/tr.qm
+
+#QMAKE_EXTRA_TARGETS = mytarget
+
+#updateqm.input = TRANSLATIONS
+#updateqm.output = $$OUT_PWD/translate/1.txt
+#isEmpty(vcproj):updateqm.variable_out = PRE_TARGETDEPS
+#updateqm.commands = $$[QT_INSTALL_BINS]/lrelease $$_PRO_FILE_PWD_/src/translation/hscene_zh.ts -qm $$OUT_PWD/hScene.app/Contents/Translations/tranlate.qm
+#updateqm.name = LRELEASE ${QMAKE_FILE_IN}
+#updateqm.CONFIG += no_link
+#QMAKE_EXTRA_COMPILERS += updateqm
+
+
+#-------------------------------------------------
+#      application icon
+#-------------------------------------------------
+# http://doc.qt.io/archives/qt-4.8/appicon.html
+
+win32:RC_FILE += $${PWD}/src/resource/icon/appico.rc
+macx:ICON = $${PWD}/src/resource/icon/appico.icns

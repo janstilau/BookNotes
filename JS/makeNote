@@ -1,0 +1,134 @@
+Qt的工程是这样一个流程：
+创建一个pro文件，使用qmake语法描述工程设置
+运行qmake命令，这个命令的作用是把pro文件转换成一个Makefile文件
+运行make命令，会用生成好的Makefile进行编译
+可以在Qt creator的项目页面查看并编辑:
+qmake /Users/hoolai/git/hMotion/hmotion.pro -spec macx-clang CONFIG+=debug CONFIG+=x86_64 && /Library/Developer/CommandLineTools/usr/bin/make qmake_all
+qmake的作用
+生成Makefile
+qmake -makefile
+生成工程文件(.pro)
+qmake -project
+对Qt特殊机制的支持，自动加入构建moc和uic的构建规则
+可以生成 Microsoft Visual studio / XCode 工程文件参考: Platform Notes | qmake Manual
+# xcode
+qmake xx.pro -spec macx-xcode
+ 
+# vs project
+set QMAKESPEC=win32-msvc2008 # if needed
+qmake -tp vc mainprojectfile.pro
+ 
+# vs solution
+qmake -tp vc -r mainprojectfile.pro
+基本语法
+很简单自己看
+qmake Language | qmake Manual
+Creating Project Files | qmake Manual
+常见功能用法
+设定编译目标名称
+默认名称为pro文件的名字，假如是一个exe工程，工程文件是hello.pro，则默认编译为hello.exe可以用TARGET变量来指定名字.目标文件名的后缀会根据目标操作系统自动添加
+TARGET = helloworld
+debug|release分支
+CONFIG(release, debug|release): message("build on release mode")
+CONFIG(debug, debug|release): message("build on debug mode")
+多条件
+win32 {
+   debug {
+       CONFIG += console
+   }
+}
+ 
+# 或者
+win32:debug {
+   CONFIG += console
+}
+设置应用程序图标
+参考: Setting the Application Icon | Qt 4.8
+win32:RC_FILE += $${PWD}/src/resource/icon/appico.rc
+macx:ICON = $${PWD}/src/resource/icon/appico.icns
+使用预编译头文件
+预编译头文件将一些项目中普遍使用的头文件内容的词法分析、语法分析等结果缓存在一个特定格式的二进制文件中当然编译实质C/C++源文件时，就不必从头对这些头文件进行词法语法分析，而只需要利用那些已经完成词法-语法分析的结果就可以了。对于大工程, 把基本上不变的内容放到预编译头文件，可以显著减少编译时间
+PRECOMPILED_HEADER = aaa.h
+/* aaa.h */
+ 
+#ifdef __cplusplus
+/* Add C++ includes here */
+ 
+#include <QRect>
+#include <QString>
+#endif
+添加framework依赖
+参考: linking mac framework to qt creator
+QMAKE_LFLAGS += -F/path/to/framework/directory/
+LIBS += -framework TheFramework
+添加lib/dll/dylib
+参考: Third Party Libraries | Qt 5.10参考: How to link to a dll - Qt Wiki
+以protobuf-lite为例
+macx {
+ LIB_PROTOBUF="$$_PRO_FILE_PWD_/libs/libprotobuf-lite.a"
+ !exists($$LIB_PROTOBUF): error ("Not existing $$LIB_PROTOBUF")
+ LIBS+= $$LIB_PROTOBUF
+}
+win32 {
+ CONFIG(release, debug|release): LIB_PROTOBUF="$$_PRO_FILE_PWD_\libs\libprotobuf-lite.lib"
+ CONFIG(debug, debug|release): LIB_PROTOBUF="$$_PRO_FILE_PWD_\libs\libprotobuf-lite-debug.lib"
+ 
+ !exists($$LIB_PROTOBUF): error ("Not existing $$LIB_PROTOBUF")
+ LIBS+= $$LIB_PROTOBUF
+}
+添加对C++新标准的支持
+添加C++14支持, C++11/17同理(注意: 需要编译器支持才能真正生效！)
+CONFIG += c++14
+编译前/后执行自定义命令
+# 编译前执行
+QMAKE_PRE_LINK = cp - f [source] [destionation]
+ 
+# 编译后执行
+QMAKE_POST_LINK = cp - f [source] [destination]
+自动编译ts文件为qm文件
+需要lrelease文件的目录已经加进了系统PATH，而且需要有实际的编译动作才会执行。
+# (caution1: this requires dir of lrelease is in PATH)
+# (caution2: this only run when there is something to compile, or this step will be omitted)
+QMAKE_PRE_LINK += lrelease $$_PRO_FILE_
+执行qmake时执行一个shell命令
+system("lrelease "$$_PRO_FILE_)
+编译完成后拷贝一些文件到指定目录
+$${QMAKE_COPY_DIR}是一个平台无关的目录拷贝命令$${QMAKE_COPY}是一个平台无关的文件拷贝命令
+QMAKE_POST_LINK += $${QMAKE_COPY_DIR} $${_PRO_FILE_PWD_}/doc/* $${_PRO_FILE_PWD_}/../otherdoc
+多个命令可以用分号隔开
+QMAKE_POST_LINK += $${QMAKE_COPY_DIR} $${_PRO_FILE_PWD_}/util/* $${_PRO_FILE_PWD_}/../other; \
+   $${QMAKE_COPY_DIR} $${_PRO_FILE_PWD_}/data/* $${_PRO_FILE_PWD_}/../other
+类似的命令: 参考
+QMAKE_TAR               = tar -cf
+QMAKE_GZIP             = gzip -9f
+ 
+QMAKE_CD               = cd
+QMAKE_COPY             = cp -f
+QMAKE_COPY_FILE         = $$QMAKE_COPY
+QMAKE_COPY_DIR         = $$QMAKE_COPY -R
+QMAKE_MOVE             = mv -f
+QMAKE_DEL_FILE         = rm -f
+QMAKE_DEL_DIR           = rmdir
+QMAKE_DEL_TREE         = rm -rf
+QMAKE_CHK_EXISTS       = test -e %1 ||
+QMAKE_CHK_DIR_EXISTS   = test -d   # legacy
+QMAKE_MKDIR             = mkdir -p   # legacy
+QMAKE_MKDIR_CMD         = test -d %1 || mkdir -p %1
+QMAKE_STREAM_EDITOR     = sed
+把文件打包进mac版本的xx.app
+macx{
+   MACX_RESOURCES.files = translations/test_zh.qm
+   MACX_RESOURCES.path = Contents/Resources
+   QMAKE_BUNDLE_DATA += MACX_RESOURCES
+}
+编译完成后拷贝文件的另一种方法(不推荐)
+config.path   = $${DESTDIR}/config
+config.files   = config/*
+INSTALLS       += config
+以上内容需要执行make install才能起作用，而Qt creator默认是执行make需要到项目页面，添加构建步骤 -> Make -> Make 参数: 设置为install
+这些构建步骤保存在xxx.pro.user文件里 参考: Sharing Project Settings | Qt Creator Manual
+其他参考
+qmake Manual
+Qt for Windows - Deployment | Qt 5.10
+Qt for macOS - Deployment | Qt 5.10
+

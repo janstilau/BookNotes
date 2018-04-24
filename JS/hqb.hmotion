@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hmotion version="1.0">
+    <skillmotions>
+        <skillmotion id="100001" name="技能动作1">
+            <effects>
+                <skilleffect type="1" frame="-1" gender="">
+                    <params>
+                        <param id="params.delay" value="1.0"/>
+                        <param id="params.loopPlay" value="1"/>
+                        <param id="params.resource" value=""/>
+                    </params>
+                </skilleffect>
+                <skilleffect type="2" frame="-1" gender="">
+                    <params>
+                        <param id="params.effectLayer" value="0"/>
+                        <param id="params.effectLocation" value="0"/>
+                        <param id="params.effectTarget" value="0"/>
+                        <param id="params.resource" value=""/>
+                        <param id="params.xCoord" value=""/>
+                        <param id="params.yCoord" value=""/>
+                    </params>
+                </skilleffect>
+                <skilleffect type="4" frame="-1" gender="">
+                    <params>
+                        <param id="params.direction" value="0"/>
+                        <param id="params.endX" value=""/>
+                        <param id="params.endY" value=""/>
+                        <param id="params.resource" value=""/>
+                        <param id="params.startX" value=""/>
+                        <param id="params.startY" value=""/>
+                        <param id="params.velocity" value="600.0"/>
+                    </params>
+                </skilleffect>
+            </effects>
+        </skillmotion>
+    </skillmotions>
+    <skills>
+        <skill id="00001" name="技能1" motionId="100001" hideState="1"/>
+    </skills>
+    <buffmotions>
+        <buffmotion id="300001" name="buff动作1" delay="0" icon1="" icon2="" text="">
+            <effects>
+                <buffeffect type="buffEffect" effectType="2" text="">
+                    <params>
+                        <param id="params.effectName" value=""/>
+                        <param id="params.effectPosition" value="2"/>
+                        <param id="params.xOffsetCoord" value="0.0"/>
+                        <param id="params.xScale" value=""/>
+                        <param id="params.yOffsetCoord" value="0.0"/>
+                        <param id="params.yScale" value=""/>
+                        <param id="params.zCoord" value="1"/>
+                    </params>
+                </buffeffect>
+                <buffeffect type="buffEffect" effectType="2" text="">
+                    <params>
+                        <param id="params.effectName" value=""/>
+                        <param id="params.effectPosition" value="2"/>
+                        <param id="params.xOffsetCoord" value="0.0"/>
+                        <param id="params.xScale" value=""/>
+                        <param id="params.yOffsetCoord" value="0.0"/>
+                        <param id="params.yScale" value=""/>
+                        <param id="params.zCoord" value="1"/>
+                    </params>
+                </buffeffect>
+            </effects>
+        </buffmotion>
+    </buffmotions>
+    <buffs>
+        <buff id="200001" name="buff1" motionId=""/>
+    </buffs>
+</hmotion>

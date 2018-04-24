@@ -1,0 +1,11 @@
+工程文件中编译qm的过程需要优化
+
+1. UI编辑器/场景编辑器/动作编辑器改为 QMAKE_PRE_LINK方式编译qm文件
+QMAKE_PRE_LINK += $$[QT_INSTALL_BINS]/lrelease $$PRO_FILE;
+2. qm文件不放在资源里，mac的放置位置参考tiled项目
+
+
+宏定义和预编译头文件
+1. 添加预编译头文件pch.h，里面包含大多数常用头文件，修改工程设置使用此预编译头文件
+2. include commonmacros.h 改为 include pch.h
+3. 删除一些没有普遍使用的宏, __cstr, __str, __char, __float_max, __todo, __config_manual, __config_path, __icon_path(需要一点设计)
